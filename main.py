@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from typing import List
 from pydantic import BaseModel
+import uvicorn
+import os
 
 app = FastAPI()
 
@@ -73,10 +75,8 @@ def actualizar_reglas(data: ReglasOrquestacion, token: str = Depends(oauth2_sche
         raise HTTPException(status_code=403, detail="Solo orquestadores pueden actualizar reglas")
     return {"mensaje": "Reglas actualizadas", "reglas": data.reglas}
 
-import uvicorn
-import os
-
+# 👇 Este bloque permite que Railway inicie correctamente el servidor
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # Railway asigna el puerto vía variable de entorno
+    port = int(os.environ.get("PORT", 8000))  # Usa el puerto que proporciona Railway
     uvicorn.run("main:app", host="0.0.0.0", port=port)
 
